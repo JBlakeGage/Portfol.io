@@ -17,7 +17,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - "ELASTIC_SEARCH_HOSTNAME=172.18.0.2"
+      - "ELASTIC_SEARCH_HOSTNAME=#"
     links:
       - es
 
@@ -30,7 +30,7 @@ services:
     environment:
       - "DATAFILE_OUTPUT_FILE_PATH=/data/output.csv"
       - "DROP_INDEX_FLAG=True"
-      - "ELASTIC_SEARCH_HOSTNAME=172.18.0.2"
+      - "ELASTIC_SEARCH_HOSTNAME="
     links:
       - es
 
