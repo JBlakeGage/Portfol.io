@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+envtpl --keep-template --allow-missing -o /code/uwsgi.ini  /code/uwsgi.ini.tpl
+
+exec uwsgi --ini /code/uwsgi.ini

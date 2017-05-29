@@ -1,0 +1,45 @@
+version: '2'
+services:
+  es:
+    image: elasticsearch:1.7
+    command: "/usr/share/elasticsearch/bin/elasticsearch start"
+    ports:
+        - 9200:9200
+        - 9300:9300
+    volumes:
+      - $PWD/data:/data
+
+  api:
+    build: .
+    command: "run-as-server"
+    volumes:
+      - .:/code
+    ports:
+      - "5000:5000"
+    environment:
+      - "ELASTIC_SEARCH_HOSTNAME=172.18.0.2"
+    links:
+      - es
+
+  indexer:
+    build: .
+    command: "python -m manage run_indexer"
+    volumes:
+      - .:/code
+      - $PWD/data:/data
+    environment:
+      - "DATAFILE_OUTPUT_FILE_PATH=/data/output.csv"
+      - "DROP_INDEX_FLAG=True"
+      - "ELASTIC_SEARCH_HOSTNAME=172.18.0.2"
+    links:
+      - es
+
+  generator:
+      build: .
+      command: "python -m manage run_generator"
+      volumes:
+        - .:/code
+        - $PWD/data:/data
+        - $PWD/data:/root/ntlk_data
+      environment:
+        - "DATAFILE_OUTPUT_FILE_PATH=/data/output.csv"
